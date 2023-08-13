@@ -30,7 +30,9 @@ class MyScaffold extends StatelessWidget {
             future: fetchRandomPoem(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return Center(
+                    child:
+                        CircularProgressIndicator()); // display centered loading circle if data not ready for display
               }
               if (snapshot.hasData) {
                 final poem = snapshot.data;
@@ -76,7 +78,7 @@ class MyScaffold extends StatelessWidget {
                   ),
                 );
               } else {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               }
             }));
   }
