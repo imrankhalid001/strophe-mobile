@@ -129,10 +129,19 @@ class _PoemWidgetState extends State<PoemWidget> {
       bottomNavigationBar: Container(
           height: 50,
           color: Colors.grey[200],
-          child: IconButton(
-            icon: Icon(Icons.shuffle),
-            onPressed:
-                _fetchRandomPoem, // when pressed, reference function to grab from API and update UI
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(Icons.favorite_border_outlined),
+                onPressed: _fetchRandomPoem,
+              ),
+              IconButton(
+                icon: Icon(Icons.shuffle),
+                onPressed:
+                    _fetchRandomPoem, // when pressed, reference function to grab from API and update UI
+              ),
+            ],
           )),
     );
   }
