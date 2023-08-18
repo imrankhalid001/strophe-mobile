@@ -161,6 +161,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(!(click) ? Icons.favorite_border_outlined : Icons.favorite),
+      color: Colors.red,
       onPressed: () {
         setState(() {
           click = !click; // if false, set true and vice versa
