@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -132,10 +133,7 @@ class _PoemWidgetState extends State<PoemWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                icon: Icon(Icons.favorite_border_outlined),
-                onPressed: _fetchRandomPoem,
-              ),
+              FavoriteWidget(),
               IconButton(
                 icon: Icon(Icons.shuffle),
                 onPressed:
@@ -143,6 +141,31 @@ class _PoemWidgetState extends State<PoemWidget> {
               ),
             ],
           )),
+    );
+  }
+}
+
+class FavoriteWidget extends StatefulWidget {
+  const FavoriteWidget({
+    super.key,
+  });
+
+  @override
+  State<FavoriteWidget> createState() => _FavoriteWidgetState();
+}
+
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  bool click = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(!(click) ? Icons.favorite_border_outlined : Icons.favorite),
+      onPressed: () {
+        setState(() {
+          click = !click; // if false, set true and vice versa
+        });
+      },
     );
   }
 }
