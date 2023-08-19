@@ -1,14 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<Map<String, dynamic>> fetchRandomPoem() async {
   final response = await http.get(Uri.parse("https://poetrydb.org/random"));
 
-  print("Grabbing new poems");
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
     return data[0];
