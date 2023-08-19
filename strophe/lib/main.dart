@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:strophe/db/fav_poems_database.dart';
 
 Future<Map<String, dynamic>> fetchRandomPoem() async {
   final response = await http.get(Uri.parse("https://poetrydb.org/random"));
@@ -107,7 +108,7 @@ class _PoemWidgetState extends State<PoemWidget> {
                         height: 16,
                       ),
                       Text(
-                        "$author",
+                        "By: $author",
                         style: TextStyle(fontSize: 20),
                       ),
                       SizedBox(
@@ -137,9 +138,54 @@ class _PoemWidgetState extends State<PoemWidget> {
                 onPressed:
                     _fetchRandomPoem, // when pressed, reference function to grab from API and update UI
               ),
+              MenuWidget()
             ],
           )),
     );
+  }
+}
+
+class MenuWidget extends StatelessWidget {
+  const MenuWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.collections_bookmark_outlined),
+      onPressed: () {
+        // changes screen to something else
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SavedPoems()),
+        );
+      }, // placeholder method being used
+    );
+  }
+}
+
+class SavedPoems extends StatefulWidget {
+  const SavedPoems({
+    super.key,
+  });
+
+  @override
+  State<SavedPoems> createState() => _SavedPoemsState();
+}
+
+class _SavedPoemsState extends State<SavedPoems> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Favorited Poems'),
+          centerTitle: true,
+          backgroundColor: Color.fromRGBO(57, 54, 70, 1.0),
+        ),
+        body: Center(
+          child: Text("This is saved menu"), // placeholder text
+        ));
   }
 }
 
