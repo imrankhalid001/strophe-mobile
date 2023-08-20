@@ -246,6 +246,12 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           Icon(!(isFavorite) ? Icons.favorite_border_outlined : Icons.favorite),
       color: Colors.red,
       onPressed: () {
+        var poem = Poem(
+            isFavorite: isFavorite,
+            title: "Random Title",
+            author: "Vinny",
+            content: "Something something");
+        PoemsDatabase.instance.create(poem);
         setState(() {
           isFavorite = !isFavorite;
         });
