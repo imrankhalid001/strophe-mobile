@@ -10,7 +10,8 @@ Future<Map<String, dynamic>> fetchRandomPoem() async {
   final response = await http.get(Uri.parse("https://poetrydb.org/random"));
 
   if (response.statusCode == 200) {
-    final data = json.decode(response.body);
+    final utfData = utf8.decode(response.bodyBytes);
+    final data = json.decode(utfData);
     return data[0];
   } else {
     throw Exception("Failed to fetch a random poem");
