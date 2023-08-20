@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, avoid_print
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:strophe/db/fav_poems_database.dart';
+import 'package:strophe/model/poem.dart';
 
 Future<Map<String, dynamic>> fetchRandomPoem() async {
   final response = await http.get(Uri.parse("https://poetrydb.org/random"));
@@ -184,8 +185,44 @@ class _SavedPoemsState extends State<SavedPoems> {
           backgroundColor: Color.fromRGBO(57, 54, 70, 1.0),
         ),
         body: Center(
-          child: Text("This is saved menu"), // placeholder text
+          child: FutureBuilder(
+              future: PoemsDatabase.instance.readAllPoems(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Poem>> snapshot) {
+                if (snapshot.hasData) {
+                  print("YES DATA");
+                  return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return displaySavedPoems(snapshot.data![index]);
+                      });
+                } else {
+                  print("NO DATA");
+                  return Center(
+                    child: Text(
+                      "No Data Found",
+                    ),
+                  );
+                }
+              }),
         ));
+  }
+
+  Widget displaySavedPoems(Poem data) {
+    return Card(
+        child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                "${data.title}",
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                "By: ${data.author}",
+                style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+              )
+            ])));
   }
 }
 
@@ -199,16 +236,17 @@ class FavoriteWidget extends StatefulWidget {
 }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool click = false;
+  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(!(click) ? Icons.favorite_border_outlined : Icons.favorite),
+      icon:
+          Icon(!(isFavorite) ? Icons.favorite_border_outlined : Icons.favorite),
       color: Colors.red,
       onPressed: () {
         setState(() {
-          click = !click; // if false, set true and vice versa
+          isFavorite = !isFavorite;
         });
       },
     );
