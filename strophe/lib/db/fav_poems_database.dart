@@ -29,10 +29,12 @@ class PoemsDatabase {
   Future _createDB(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
+    final boolType = 'BOOLEAN NOT NULL';
 
     await db.execute('''
 CREATE TABLE $tablePoems (
   ${PoemFields.id} $idType,
+  ${PoemFields.isFavorite} $boolType,
   ${PoemFields.title} $textType,
   ${PoemFields.author} $textType,
   ${PoemFields.content} $textType
@@ -49,6 +51,7 @@ CREATE TABLE $tablePoems (
 
   Future<Poem> readPoem(int id) async {
     final db = await instance.database;
+
     final maps = await db.query(
       tablePoems,
       columns: PoemFields.values,
