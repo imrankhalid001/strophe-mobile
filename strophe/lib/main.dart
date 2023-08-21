@@ -6,8 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:strophe/db/fav_poems_database.dart';
 import 'package:strophe/model/poem.dart';
 
+var currentPoem;
+var id;
+
 Future<Map<String, dynamic>> fetchRandomPoem() async {
   final response = await http.get(Uri.parse("https://poetrydb.org/random"));
+  id = DateTime.now()
+      .millisecondsSinceEpoch; // set id to unique value every time new poem is fetched
 
   if (response.statusCode == 200) {
     final utfData = utf8.decode(response.bodyBytes);
@@ -17,8 +22,6 @@ Future<Map<String, dynamic>> fetchRandomPoem() async {
     throw Exception("Failed to fetch a random poem");
   }
 }
-
-var currentPoem;
 
 class MyScaffold extends StatelessWidget {
   const MyScaffold({super.key});
@@ -63,8 +66,14 @@ class _PoemWidgetState extends State<PoemWidget> {
     for (int i = 0; i < lines.length; i++) {
       content += lines[i] + "\n";
     }
-    currentPoem =
-        Poem(title: title, author: author, content: content, isFavorite: false);
+
+    currentPoem = Poem(
+        // create Poem object with these values
+        id: id,
+        title: title,
+        author: author,
+        content: content,
+        isFavorite: false);
 
     setState(() {
       // updating existing/parent fields with values from new call
@@ -96,6 +105,8 @@ class _PoemWidgetState extends State<PoemWidget> {
                 content += lines[i] + "\n";
               }
               currentPoem = Poem(
+                  // make sure to do it here too!
+                  id: id,
                   title: title,
                   author: author,
                   content: content,
@@ -250,14 +261,17 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon:
-          Icon(!(isFavorite) ? Icons.favorite_border_outlined : Icons.favorite),
+      icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border_outlined),
       color: Colors.red,
-      onPressed: () {
-        print(currentPoem
-            .isFavorite); // BUG: always result in false for some reason
-        PoemsDatabase.instance
-            .create(currentPoem); // if not yet favorited, favorite
+      onPressed: () async {
+        if (isFavorite) {
+          await PoemsDatabase.instance.delete(currentPoem.id);
+          print(
+              "DELETED"); // BUG: if you favorite poem and then shuffle, heart will remain, and if you unfavorite, it will delete poem even though it hasn't been inserted yet
+        } else {
+          await PoemsDatabase.instance.create(currentPoem);
+          print("ADDED");
+        }
         setState(() {
           isFavorite = !isFavorite;
         });
