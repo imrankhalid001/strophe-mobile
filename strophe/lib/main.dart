@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, avoid_print, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -17,6 +17,8 @@ Future<Map<String, dynamic>> fetchRandomPoem() async {
     throw Exception("Failed to fetch a random poem");
   }
 }
+
+var currentPoem;
 
 class MyScaffold extends StatelessWidget {
   const MyScaffold({super.key});
@@ -61,6 +63,8 @@ class _PoemWidgetState extends State<PoemWidget> {
     for (int i = 0; i < lines.length; i++) {
       content += lines[i] + "\n";
     }
+    currentPoem =
+        Poem(title: title, author: author, content: content, isFavorite: false);
 
     setState(() {
       // updating existing/parent fields with values from new call
@@ -91,6 +95,12 @@ class _PoemWidgetState extends State<PoemWidget> {
               for (int i = 0; i < lines.length; i++) {
                 content += lines[i] + "\n";
               }
+              currentPoem = Poem(
+                  title: title,
+                  author: author,
+                  content: content,
+                  isFavorite: false);
+
               return SingleChildScrollView(
                 child: Center(
                   child: Padding(
@@ -191,14 +201,12 @@ class _SavedPoemsState extends State<SavedPoems> {
               builder:
                   (BuildContext context, AsyncSnapshot<List<Poem>> snapshot) {
                 if (snapshot.hasData) {
-                  print("YES DATA");
                   return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         return displaySavedPoems(snapshot.data![index]);
                       });
                 } else {
-                  print("NO DATA");
                   return Center(
                     child: Text(
                       "No Data Found",
@@ -246,12 +254,10 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           Icon(!(isFavorite) ? Icons.favorite_border_outlined : Icons.favorite),
       color: Colors.red,
       onPressed: () {
-        var poem = Poem(
-            isFavorite: isFavorite,
-            title: "Random Title",
-            author: "Vinny",
-            content: "Something something");
-        PoemsDatabase.instance.create(poem);
+        print(currentPoem
+            .isFavorite); // BUG: always result in false for some reason
+        PoemsDatabase.instance
+            .create(currentPoem); // if not yet favorited, favorite
         setState(() {
           isFavorite = !isFavorite;
         });
