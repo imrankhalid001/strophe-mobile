@@ -5,4 +5,4 @@ strophe but mobile (created using dartlang and flutter)
 I like poetry, and I like coding
 
 # challenges
-State management is hard and oftentimes verbose
+databases suck
