@@ -73,7 +73,8 @@ class _PoemWidgetState extends State<PoemWidget> {
         title: title,
         author: author,
         content: content,
-        isFavorite: false);
+        isFavorite:
+            false); // figure out way to change this value (probably need setter in db module)
 
     setState(() {
       // updating existing/parent fields with values from new call
