@@ -265,9 +265,10 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
       icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border_outlined),
       color: Colors.red,
       onPressed: () async {
+        print(await PoemsDatabase.instance
+            .readAllPoems()); // find way to iterate through list of poems to check if current poem exists in db already
         if (isFavorite) {
           await PoemsDatabase.instance.delete(currentPoem.id);
-          print(await PoemsDatabase.instance.readAllPoems());
           print(
               "DELETED"); // BUG: if you favorite poem and then shuffle, heart will remain, and if you unfavorite, it will delete poem even though it hasn't been inserted yet
         } else {
