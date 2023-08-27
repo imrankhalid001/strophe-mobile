@@ -73,7 +73,8 @@ class _PoemWidgetState extends State<PoemWidget> {
         title: title,
         author: author,
         content: content,
-        isFavorite: false);
+        isFavorite:
+            false); // figure out way to change this value (probably need setter in db module)
 
     setState(() {
       // updating existing/parent fields with values from new call
@@ -314,6 +315,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
       icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border_outlined),
       color: Colors.red,
       onPressed: () async {
+        print(await PoemsDatabase.instance
+            .readAllPoems()); // find way to iterate through list of poems to check if current poem exists in db already
         if (isFavorite) {
           await PoemsDatabase.instance.delete(currentPoem.id);
           print(
