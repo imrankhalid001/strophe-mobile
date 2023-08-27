@@ -232,17 +232,67 @@ class _SavedPoemsState extends State<SavedPoems> {
     return Card(
         child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: GestureDetector(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${data.title}",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Text(
+                        "By: ${data.author}",
+                        style: TextStyle(
+                            fontSize: 14, fontStyle: FontStyle.italic),
+                      )
+                    ]),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StoredPoem(poem: data)));
+                })));
+  }
+}
+
+class StoredPoem extends StatelessWidget {
+  final Poem poem;
+
+  const StoredPoem({Key? key, required this.poem}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(poem.title),
+        backgroundColor: Color.fromRGBO(57, 54, 70, 1.0),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                "${data.title}",
-                style: TextStyle(fontSize: 18),
+                poem.title,
+                style: TextStyle(fontSize: 32.0),
               ),
+              SizedBox(height: 16.0),
               Text(
-                "By: ${data.author}",
-                style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-              )
-            ])));
+                'By: ${poem.author}',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                poem.content,
+                style: TextStyle(fontSize: 24.0),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
