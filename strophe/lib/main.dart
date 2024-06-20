@@ -8,6 +8,7 @@ import 'package:strophe/model/poem.dart';
 
 var currentPoem;
 var id;
+bool isFavorite = false;
 
 Future<Map<String, dynamic>> fetchRandomPoem() async {
   final response = await http.get(Uri.parse("https://poetrydb.org/random"));
@@ -62,6 +63,9 @@ class _PoemWidgetState extends State<PoemWidget> {
     final lines = poemData['lines'];
 
     var content = '';
+    isFavorite = false ;
+
+
 
     for (int i = 0; i < lines.length; i++) {
       content += lines[i] + "\n";
@@ -307,7 +311,6 @@ class FavoriteWidget extends StatefulWidget {
 }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
